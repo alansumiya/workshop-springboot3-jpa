@@ -1,21 +1,39 @@
 package com.educandoweb.course.resources;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.educandoweb.course.entities.User;
+import com.educandoweb.course.services.UserService;
 
 @RestController
 @RequestMapping(value = "/users")  //caminho relacionado a entidade user na url
 public class UserResource {
 	
+	//Criando uma dependência para o service
+	@Autowired  //spring faz a injeção de dependência
+	private UserService service;
+	
 	@GetMapping //responde a requisição get do meu http
-	public ResponseEntity<User> findAll(){
-		//teste instanciando uma variável u com os dados
-		User u = new User(1L, "Maria", "maria@gmail.com", "9999999", "12345");
+	//referente ao método de userService que retorna todos os usuários do banco de dados
+	public ResponseEntity<List<User>> findAll(){
+		List<User> list = service.findAll();
+
 		//retorna a variável em formato json
-		return ResponseEntity.ok().body(u);
+		return ResponseEntity.ok().body(list);
+	}
+	
+	@GetMapping(value = "/{id}")  //indica que minha requisição vai aceitar o id dentro da url
+	//o parâmetro que chega é pela url, para ser aceito precisa usar o @PathVariable
+	//referente ao método de userService que retorna o usuário por id
+	public ResponseEntity<User> findById(@PathVariable Long id){
+		User obj = service.findById(id);
+		return ResponseEntity.ok().body(obj);
 	}
 }
