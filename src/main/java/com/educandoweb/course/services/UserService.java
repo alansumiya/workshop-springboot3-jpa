@@ -34,4 +34,20 @@ public class UserService {
 	public void delete(Long id) {
 		repository.deleteById(id);
 	}
+	
+	public User update(Long id, User obj) {
+		//ele não acessa de cara o dado, ele prepara o objeto monitorado pra vc mexer e depois
+		//efetuar uma operação no banco de dados, é mais eficiente
+		User entity = repository.getReferenceById(id);
+		updateData(entity, obj);
+		return repository.save(entity);
+	}
+
+	//método que de fato faz a atualização no banco de dados
+	private void updateData(User entity, User obj) {
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
+		
+	}
 }
