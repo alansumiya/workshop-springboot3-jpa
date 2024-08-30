@@ -12,6 +12,8 @@ import com.educandoweb.course.repositories.UserRepository;
 import com.educandoweb.course.services.exceptions.DataBaseException;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service //Registra como componente de serviço da spring
 public class UserService {
 
@@ -53,11 +55,16 @@ public class UserService {
 	}
 	
 	public User update(Long id, User obj) {
-		//ele não acessa de cara o dado, ele prepara o objeto monitorado pra vc mexer e depois
-		//efetuar uma operação no banco de dados, é mais eficiente
-		User entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			//ele não acessa de cara o dado, ele prepara o objeto monitorado pra vc mexer e depois
+			//efetuar uma operação no banco de dados, é mais eficiente
+			User entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
 
 	//método que de fato faz a atualização no banco de dados
