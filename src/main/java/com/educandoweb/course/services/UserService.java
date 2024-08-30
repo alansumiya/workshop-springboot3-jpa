@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.DataBaseException;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 @Service //Registra como componente de serviço da spring
@@ -34,7 +36,20 @@ public class UserService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
+		//Criado uma variável optional para varrer o banco de dados
+		Optional<User> user = repository.findById(id);
+		//verifica se está presente o id que queremos apagar
+		if (user.isPresent()) {
+			try {
+				repository.deleteById(id);
+				//trata caso o usuário já está vinculado a um pedido
+			} catch (DataIntegrityViolationException e) {
+				throw new DataBaseException(e.getMessage());
+			}
+		} else {
+			//se o id não estiver presente ele trata com o erro personalizado não presente
+			throw new ResourceNotFoundException(id);
+		}
 	}
 	
 	public User update(Long id, User obj) {
