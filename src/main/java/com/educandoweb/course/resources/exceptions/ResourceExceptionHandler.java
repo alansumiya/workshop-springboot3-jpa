@@ -27,7 +27,7 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(DataBaseException.class) //anotação para que o método vai interceptar
-	//qualquer exceção do tipo ResourceNotFoundException e vai fazer o tratamento que estiver
+	//qualquer exceção do tipo DataBaseException e vai fazer o tratamento que estiver
 	//dentro do método
 	public ResponseEntity<StandardError> database (DataBaseException e, HttpServletRequest request){
 		String error = "DataBase error";

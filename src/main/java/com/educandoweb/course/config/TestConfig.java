@@ -1,4 +1,4 @@
-package com.educandoweb.course.config;
+/*package com.educandoweb.course.config;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -93,3 +93,4 @@ public class TestConfig implements CommandLineRunner {
 		orderRepository.save(o1);
 	}
 }
+*/
